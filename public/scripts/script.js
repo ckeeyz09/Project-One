@@ -134,7 +134,7 @@ $(function (){
       setupView: function() {
         //sppend existing Comment to view
         gameController.all();
-        $('new-comment').on('submit', function (event) {
+        $('#new-comment').on('submit', function (event) {
           event.preventDefault();
           var commentText = $('#comment-text').val();
           gameController.save(commentText);
