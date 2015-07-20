@@ -38,19 +38,6 @@ $(function (){
     save: function (newUser, newStatus) {
       var statusData = {status: status};
 
-    //   $.ajax ({
-    //     type: 'POST',
-    //     url: '/api/comment',
-    //     data: {
-    //       // user: user,
-    //       status: status
-    //     },
-    //     success: function(data) {
-    //       gameController.render(data);
-    //     }
-    //   })
-    // },
-
 
       $.post('/api/comment', statusData, function (data) {
         gameController.render(data);
@@ -69,7 +56,7 @@ $(function (){
             var updatedComment = data;
 
             // replace existing Comment with updated Comment
-            var $cHtml = $(gameController.template(updatedComment));
+            var $cHtml = $(gameController.cTemplate(updatedComment));
             $('#comment-' + commentId).replaceWith($cHtml);
           }
         })
