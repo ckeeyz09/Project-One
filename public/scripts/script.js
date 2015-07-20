@@ -35,7 +35,7 @@ $(function (){
 
 
   // add new comment to front page
-    save: function (newUser, newStatus) {
+    save: function (status) {
       var statusData = {status: status};
 
 
