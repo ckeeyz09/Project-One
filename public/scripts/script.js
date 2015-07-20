@@ -118,7 +118,7 @@ $(function (){
 
           //update the Comment with form data
           var updatedStatus = $(this).find('.updated-status').val();
-          statusController.update(commentId, updatedStatus);
+          gameController.update(commentId, updatedStatus);
         });
 
         // for delete: click event on `.delete-comment` button
