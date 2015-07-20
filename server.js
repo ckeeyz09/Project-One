@@ -9,9 +9,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     Comment = require('./models/comment'),
     session = require('express-session'),
-    User = require('./models/User'),
-    cors = require('cors'),
-    db = require('./models/comment');
+    // User = require('./models/user'),
+    cors = require('cors');
 
     mongoose.connect(
       process.env.MONGOLAB_URI ||
