@@ -74,15 +74,23 @@
                 </ol>
             </div>
             <div class="col-md-6" id="comments">
-                <script type="text/template" id="comment-template">
+              <div class="row">
+                <form id="new-comment">
+                  <textarea class="form-control" id="comment-text" rows="2" col="10" placeholder="What's on your mind?" required></textarea>
+                  <br>
+                  <input type="submit" class=" btn btn-primary" id="new-comment-button" value="Submit Comment!">
+                </form>
+              </div>
+              <div class="row" id="comment-list">
+                <script type="text/template" id="comment-template" col="5" row="2">
                 <div class="comment-container">
-                    <div class="post panel panel-success" id="post-<%= _id %>" data-id="<%= _id %>"> 
+                    <div class="comment panel panel-success" id="comment-<%= _id %>" data-id="<%= _id %>"> 
                         <div class="panel-heading">
-                            <h3 class="panel-title"><%= title %></h3>
+                            <h3 class="panel-title">Username placeholder</h3>
                         </div>
                         <div class="panel-body">
                             <span class="my-button-group">
-                                <button class="close right-side delete-post" aria-label="Close">
+                                <button class="close right-side delete-comment" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 <a class="edit-pencil" role="button" data-toggle="collapse" data-target="#update-<%= _id %>">
@@ -91,29 +99,21 @@
                                 <br>
                             </span>
                             <div class="col-sm-3">
-                                <img width="150" height="150" src= "<%= image %>" class="img-responsive" id="new-image-template" />
                             </div>
                             <div class="col-sm-9">
-                                <p><%= body %></p>
-                            </div>
-                            <div>
-                                <a data-toggle="modal" data-target="#add-comment-modal" class="btn btn-primary">Add Comment
-                                </a>
+                                <p><%= status %></p>
                             </div>
                             <div class="collapse" id="update-<%= _id %>">
                             <br>
-                            <form class="form-inline update-post">
-                                <input type="text" class="form-control updated-image" value="<%= image %>" placeholder="Update image URL">
-                                <input type="text" class="form-control updated-title" value="<%= title %>" placeholder="Update game title">
-                                <textarea class="form-control updated-body" rows="5" value="<%= body %>" placeholder="Update game description"></textarea>
-                                <input type="submit" class="btn btn-danger" value="Submit update">
+                            <form class="form-inline update-comment">
+                                <textarea class="form-control updated-status" rows="5" value="<%= status %>" placeholder="Update your status"></textarea>
+                                <input type="submit" class="btn btn-danger" value="Submit Update">
                             </form>
-                            <div class="comment-list" id="comments=<%= _id %>">
-                            </div>
                         </div>
                     </div>
                 </div>
                 </script>
+              </div>
             </div>
         </div>
     </div>
