@@ -11,7 +11,7 @@ var express = require('express'),
     session = require('express-session'),
     // User = require('./models/user'),
     cors = require('cors'),
-    Score = require('./models/Score');
+    Score = require('./models/score');
 
     mongoose.connect(
       process.env.MONGOLAB_URI ||
@@ -110,7 +110,7 @@ app.put('/api/comment/:id', function (req, res) {
   // find the phrase in db by id
   Comment.findOne({_id:targetId}, function (err, foundComment){
     //update the Comment's user and body
-    foundComment.user = req.body.user;
+    // foundComment.user = req.body.user;
     foundComment.status = req.body.status;
 
     //save updated Comment in db
