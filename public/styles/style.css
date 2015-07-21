@@ -1,0 +1,19 @@
+body {
+  padding-bottom: 50px;
+  background-image: url("http://imgur.com/8QLLy2e.jpg");
+}
+
+#comments {
+  text-align: center;
+}
+
+#scoreboard {
+  text-align: center;
+}
+
+#game-canvas {
+    padding: 10;
+    margin: auto;
+    display: block;
+    background-color: rgba(0, 0, 0, 1);
+}

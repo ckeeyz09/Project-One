@@ -128,9 +128,60 @@ $(function (){
 
           $(this)[0].reset();
         });
-      }
-      
+      },
+    
+
 
   }; //end gameController
   gameController.setupView();
+
+      var scoreArray = [];
+
+      var sTemplate = _.template($('#score-template').html());
+
+  var scoreController = {
+      //LEADERBOARD
+      //populate scores to the leaderboard
+      all: function (user, score) {
+        $.ajax ({
+          type: 'GET',
+          url: '/api/score',
+          data: {
+            user: user, 
+            score: score
+          },
+          success: function (data) {
+            var allComment = data;
+            _.each(allComment, function(score) {
+              // pass each phrase object through template and append to view
+              scoreArray.push(score);
+              console.log(scoreArray);
+            });
+            console.log("scoreArray", scoreArray);
+            scoreController.sort(scoreArray);
+          }
+        })
+      },
+
+      render: function (data) {
+        var $sHtml = $(gameController.sTemplate(data));
+        $('#score-list').append($sHtml);
+      },
+
+      //push new score to the list
+      sort: function (scoreArray) {
+        scoreArray.sort(function(a, b) {return b[1] - a[1]})
+
+        $.post('/api/score', scoreArray, function (data) {
+          gameController.render(data);
+        });
+        console.log('sorted', scoreArray);
+      },
+
+      setupView: function () {
+        scoreController.all();
+
+      }
+  }; // end scoreController
+  scoreController.setupView();
 });

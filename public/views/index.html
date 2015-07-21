@@ -55,36 +55,48 @@
 
                     }
                 </script>
-
             <!-- </div> -->
         </div>
         <div class="row" id="scoreboard-comments">
+        <br>
+        <br>
             <div class="col-md-6" id="scoreboard">
-                <ol type="1" class="scoreboard">
-                    <li>(Array position 0).username<span>(Array position 0).score</span></li>
-                    <li>(Array position 1).username<span>(Array position 1).score</span></li>
-                    <li>(Array position 2).username<span>(Array position 2).score</span></li>
-                    <li>(Array position 3).username<span>(Array position 3).score</span></li>
-                    <li>(Array position 4).username<span>(Array position 4).score</span></li>
-                    <li>(Array position 5).username<span>(Array position 5).score</span></li>
-                    <li>(Array position 6).username<span>(Array position 6).score</span></li>
-                    <li>(Array position 7).username<span>(Array position 7).score</span></li>
-                    <li>(Array position 8).username<span>(Array position 8).score</span></li>
-                    <li>(Array position 9).username<span>(Array position 9).score</span></li>
-                </ol>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                <h3 class="panel-title"> Leader Board </h3>
+                </div>
+                <div class="panel-body" id="score-list">
+                <script type="text/template" id="score-template">
+                    <ol type="1" class="scoreboard">
+                        <li class="col-sm-6"><%= statusArray[0].user %></li><li class="col-sm-6"><%= score1 %></li>
+                        <li class="col-sm-6"><%= user2 %></li><li class="col-sm-6"><%= score2 %></li>
+                        <li class="col-sm-6"><%= user3 %></li><li class="col-sm-6"><%= score3 %></li>
+                        <li class="col-sm-6"><%= user4 %></li><li class="col-sm-6"><%= score4 %></li>
+                        <li class="col-sm-6"><%= user5 %></li><li class="col-sm-6"><%= score5 %></li>
+                        <li class="col-sm-6"><%= user6 %></li><li class="col-sm-6"><%= score6 %></li>
+                        <li class="col-sm-6"><%= user7 %></li><li class="col-sm-6"><%= score7 %></li>
+                        <li class="col-sm-6"><%= user8 %></li><li class="col-sm-6"><%= score8 %></li>
+                        <li class="col-sm-6"><%= user9 %></li><li class="col-sm-6"><%= score9 %></li>
+                        <li class="col-sm-6"><%= user10 %></li><li class="col-sm-6"><%= score10 %></li>
+                    </ol>
+                </script>
+                </div>
+            </div>
             </div>
             <div class="col-md-6" id="comments">
               <div class="row">
                 <form id="new-comment">
                   <textarea class="form-control" id="comment-text" rows="2" col="10" placeholder="What's on your mind?" required></textarea>
                   <br>
-                  <input type="submit" class=" btn btn-primary" id="new-comment-button" value="Submit Comment!">
+                  <input type="submit" class=" btn btn-success" id="new-comment-button" value="Submit Comment!">
+                  <br>
                 </form>
+                <br>
               </div>
               <div class="row" id="comment-list">
                 <script type="text/template" id="comment-template" col="5" row="2">
                 <div class="comment-container">
-                    <div class="comment panel panel-success" id="comment-<%= _id %>" data-id="<%= _id %>"> 
+                    <div class="comment panel panel-info" id="comment-<%= _id %>" data-id="<%= _id %>"> 
                         <div class="panel-heading">
                             <h3 class="panel-title">Username placeholder</h3>
                         </div>

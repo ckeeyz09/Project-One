@@ -10,12 +10,13 @@ var express = require('express'),
     Comment = require('./models/comment'),
     session = require('express-session'),
     // User = require('./models/user'),
-    cors = require('cors');
+    cors = require('cors'),
+    Score = require('./models/Score');
 
     mongoose.connect(
       process.env.MONGOLAB_URI ||
       process.env.MONGOHQ_URL ||
-      'mongodb://localhost/banana-madness' // plug in the db name you've been using
+      'mongodb://localhost/projectone' // plug in the db name you've been using
     );
 
 
@@ -130,6 +131,29 @@ app.delete('/api/comment/:id', function (req, res) {
     res.json(deletedComment);
   });
 });
+
+// LEADERBOARD
+
+app.get('/api/score', function (req, res) {
+  Score.find(function (err, scores) {
+    res.json(scores);
+    console.log("scores", scores);
+  });
+});
+
+app.post('/api/score', function (req, res) {
+  // grab params from form data (user, score)
+  var newScore = new Score({
+    status: 0 //this is where we put the route to the game score
+  })
+  console.log("newScore", newScore);
+  //save new Comment into database
+  newScore.save(function (err, savedScore) {
+    console.log("savedScore", savedScore);
+    res.json(savedScore);
+  });
+})
+
 
 
 // listen on port 5000
