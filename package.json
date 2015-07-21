@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ckeeyz09/Project-One#readme",
   "dependencies": {
+    "bcrypt": "^0.8.3",
     "body-parser": "^1.13.2",
     "chai": "^3.2.0",
     "cheerio": "^0.19.0",
@@ -26,6 +27,7 @@
     "express-session": "^1.11.3",
     "mongoose": "^4.0.8",
     "request": "^2.59.0",
+    "salt": "^0.5.5",
     "underscore": "^1.8.3"
   }
 }

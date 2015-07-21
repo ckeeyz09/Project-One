@@ -9,48 +9,99 @@ var express = require('express'),
     mongoose = require('mongoose'),
     Comment = require('./models/comment'),
     session = require('express-session'),
-    // User = require('./models/user'),
+    User = require('./models/user'),
     cors = require('cors'),
     Score = require('./models/score');
-
+// require('./models/user.js');
     mongoose.connect(
       process.env.MONGOLAB_URI ||
       process.env.MONGOHQ_URL ||
       'mongodb://localhost/projectone' // plug in the db name you've been using
     );
 
+    // tell app to use bodyParser middleware
+    app.use(bodyParser.urlencoded({extended: true}));
+
 
 //AUTHENTICATION
 
-// // setup session using cookies
-// app.use(session ({
-//   saveUninitialized: true,
-//   resave: true,
-//   secret: 'SecretCookieSecret',
-//   cookie: { maxAge: 60000}
-// }));
+// setup session using cookies
+app.use(session ({
+  saveUninitialized: true,
+  resave: true,
+  secret: 'SecretCookieSecret',
+  cookie: { maxAge: 60000}
+}));
 
-// // login function using authentication
-// app.get('/login', function (req, res) {
-//   var html = '<form action="/api/sessions" method="post">' +'Your email: <input type="text" name="email"><br>' + '<button type="submit">Submit</button>' + '</form>';
 
-//   if (req.session.user) {
-//     html += '<br>Your email from your session is: ' + req.session.user.email;
-//   }
-//   console.log(req.session);
-//   res.send(html);
-// });
+//functions to manage sessions (login logout and current user)
+app.use('/', function (req, res, next) {
+  //saves userId in session for logged in user
+  req.login = function (user) {
+    req.session.userId = user.id;
+  };
 
-// // creates a new session
-// app.post('/api/sessions', function (req, res) {
-//   User.authenticate(req.body.email, req.body.password, function (error, user) {
-//     req.session.user = user;
-//     res.redirect('/login');
-//   });
-// });
+  //finds user currently logged in based on 'session'
+  req.currentUser = function (callback) {
+    User.findOne({_id: req.session.userId}, function (err, user) {
+      req.user = user;
+      callback(null, user);
+    });
+  };
 
-// tell app to use bodyParser middleware
-app.use(bodyParser.urlencoded({extended: true}));
+  // destroy 'session' to log user out
+  req.logout = function () {
+    req.session.userId = null;
+    req.user = null;
+  };
+
+  next();
+})
+
+
+// get route to show all users
+app.get('/users', function (req, res) {
+  User.find(function (err, users) {
+    console.log('users are: ', users);
+    res.send(users);
+  })
+})
+
+// user submits the signup form
+app.post('/users', function (req, res) {
+
+  // grab user data from params (req.body)
+  
+  var newUser = req.body;
+  console.log("req.body", newUser);
+  // create new user with secure password
+  User.createSecure(newUser.email, newUser.password, newUser.username, function (err, user) {
+    res.send(user);
+  });
+});
+
+// creates a new session
+app.post('/api/sessions', function (req, res) {
+  User.authenticate(req.body.email, req.body.password, function (error, user) {
+    req.session.user = user;
+    res.redirect('/login');
+  });
+});
+
+// login and authenticate usename and password
+app.post('/login', function (req, res) {
+
+  //grab user data from req.body
+  var userData = req.body;
+
+  //call authenticate function to check if password user entered is correct
+  User.authenticate(userData.email, userData.password, function (err, user) {
+    req.login(user);
+
+    //redirect to user profile
+    res.redirect('/profile');
+  });
+});
 
 
 //STATIC ROUTES
@@ -64,6 +115,14 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/public/views/index.html');
 });
 
+// set up route to respond to calls for signup.html
+app.get('/signup', function (req, res) {
+  res.sendFile(__dirname + '/public/views/signup.html');
+});
+
+app.get('/profile', function (req, res) {
+  res.sendFile(__dirname + '/public/views/profile.html');
+})
 //API ROUTES
 
 //Comment index

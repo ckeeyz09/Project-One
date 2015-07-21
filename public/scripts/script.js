@@ -184,4 +184,23 @@ $(function (){
       }
   }; // end scoreController
   scoreController.setupView();
+
+
+  //AUTHENTICATION
+    // var removeLogin = function (username){
+    //   console.log('removing login')
+    //   $('.logout').show();
+    //   $(".header form").hide();
+    //   $(".userSignup").hide();
+    //   $(".loggedin").html(username).show()
+
+    // }
+  // $('#sign-up').on('click', function (email, password, username) {
+  //   var userData = {email: email, password: password, username: username};
+  //   $.post('/users', userData, function (data) {
+      
+  //   }
+  // })
+
+
 });
