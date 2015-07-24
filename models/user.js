@@ -1,15 +1,19 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     bcrypt = require('bcrypt'),
-    salt = bcrypt.genSaltSync(10);
+    salt = bcrypt.genSaltSync(10),
+    Comment = require('./comment.js');
+
+
 
 var UserSchema = new Schema({
   email: String,
   passwordDigest: String,
-  username: String
+  username: String,
+  comment: [Comment]
 });
 
-// var User = mongoose.model('User', UserSchema);
+
 
 // create a new user with secure (hashed) password
 UserSchema.statics.createSecure = function (email, password, username, callback) {
@@ -40,12 +44,15 @@ UserSchema.statics.authenticate = function (email, password, callback) {
     
     // throw error if can't find user
     if (user === null) {
-      throw new Error('Invalid email or password');
+      throw new Error('Invalid email');
 
     // if found user, check if password is correct
     } else if (user.checkPassword(password)) {
       callback(null, user);
+    } else {
+      throw new Error('Invalid Password');
     }
+
   });
 };
 
@@ -57,6 +64,7 @@ UserSchema.methods.checkPassword = function (password) {
 
 // define user model
 var User = mongoose.model('User', UserSchema);
+
 
 
 module.exports = User;

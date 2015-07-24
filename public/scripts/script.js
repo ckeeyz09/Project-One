@@ -30,13 +30,14 @@ $(function (){
         gameController.addEventHandlers();
       }
     })
-    console.log("refreshed")
   },
 
 
   // add new comment to front page
     save: function (status) {
-      var statusData = {status: status};
+      var statusData = {
+        status: status
+      };
 
 
       $.post('/api/comment', statusData, function (data) {
@@ -79,22 +80,6 @@ $(function (){
 
       //event handlers for page
       addEventHandlers: function () {
-        // console.log('event handlers loaded');
-        
-        // //add event-handler to new-Comment modal
-        // $('#new-comment').on('click', function(event) {
-        //   event.preventDefault();
-
-        //   //create new Comment with form data
-        //   var newStatus = $('#comment-text').val(); 
-        //   gameController.save(newStatus);
-
-        //   // reset the form
-        //   $(this)[0].reset();
-        //   $('#comment-text').focus();
-          
-
-        // });
 
         // for update: submit event on '.update-comment' form
         $('#comment-list').on('submit', '.update-comment', function(event){
@@ -155,9 +140,7 @@ $(function (){
             _.each(allComment, function(score) {
               // pass each phrase object through template and append to view
               scoreArray.push(score);
-              console.log(scoreArray);
             });
-            console.log("scoreArray", scoreArray);
             scoreController.sort(scoreArray);
           }
         })
@@ -175,7 +158,6 @@ $(function (){
         $.post('/api/score', scoreArray, function (data) {
           gameController.render(data);
         });
-        console.log('sorted', scoreArray);
       },
 
       setupView: function () {
@@ -186,21 +168,158 @@ $(function (){
   scoreController.setupView();
 
 
-  //AUTHENTICATION
-    // var removeLogin = function (username){
-    //   console.log('removing login')
-    //   $('.logout').show();
-    //   $(".header form").hide();
-    //   $(".userSignup").hide();
-    //   $(".loggedin").html(username).show()
+  // Login/sign up/logout functionality
+  var loggedOut = function () {
+    $("#login-name").text("");
+    $("#signup-login").removeClass("hidden");
+    $("#logged-in").addClass("hidden");
+  }
 
-    // }
-  // $('#sign-up').on('click', function (email, password, username) {
-  //   var userData = {email: email, password: password, username: username};
-  //   $.post('/users', userData, function (data) {
-      
-  //   }
-  // })
+  var loggedIn = function () {
+    $("#signup-login").addClass("hidden");
+    $("#logged-in").removeClass("hidden");
+  }
+
+  $.ajax({
+    url: '/api/current',
+    type: "GET",
+    success: function (data) {
+      if (data) {
+        $("#login-name").text(data.username);
+        loggedIn();
+      } else {
+        loggedOut();
+      }
+    },
+    error: function () {
+      console.log("Error, could not GET username");
+    }
+  });
+
+  $("#signup-form").on("submit", function (event) {
+    event.preventDefault();
+    var newUserObj = {
+      username: $("#username-signup").val(),
+      password: $("#password").val()
+    }
+    $("#signup-modal").modal("hide");
+    $.ajax({
+      url: "/api/users",
+      type: "POST",
+      data: newUserObj,
+      success: function (data) {
+        $("#login-name").text(data.username);
+        loggedIn();
+        alert("You have logged in!");
+      },
+      error: function () {
+        console.log("Error, could not post new User!");
+      }
+    });
+  });
+
+  $("#loginForm").on('submit', function (event) {
+    event.preventDefault();
+    var loginUserObj = {
+      email: $("#login-email").val(),
+      password: $("#login-password").val()
+    }
+    $("#login-modal").modal("hide");
+    $.ajax({
+      url: '/login',
+      type: "POST",
+      data: loginUserObj,
+      success: function (data) {
+        $("#login-name").text(data.username);
+        loggedIn();
+        alert("You have logged in!");
+      },
+      error: function () {
+        console.log("Error, could not log in");
+      }
+    });
+  });
+
+  $("#logout-button").on('click', function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: '/logout',
+      type: 'GET',
+      success: function (data) {
+        loggedOut();
+        alert("You have logged out");
+      },
+      error: function () {
+      }
+    });
+  });
+  // END login/sign up/logout functionality
+
+  //VALIDATION
+
+  $('#signupForm').validate({
+    rules: {
+      username: {
+        required: true,
+        minlength: 2
+      },
+      email: {
+        required: true,
+        email: true
+      },
+      password: {
+        required: true,
+        minlength: 6
+      },
+      confirm_password: {
+        required: true,
+        minlength: 6,
+        equalTo: '#signup-password'
+      }
+    },
+    messages: {
+      username: {
+        required: "Please enter a username",
+        minlength: "Your username must be at least 2 characters"
+        },
+        email: {
+          required: "Please enter an email",
+          email: "Email must be valid"
+        },
+        password: {
+          required: "Please enter a password",
+          minlength: "Password must be at least 6 characters"
+        },
+        confirm_password: {
+          required: "Please enter a password",
+          minlength: "Password must be at least 6 characters",
+          equalTo: "Passwords do not match"
+        }
+    }
+  });
+
+  $('#loginForm').validate({
+    rules: {
+      email: {
+        required: true,
+        email: true
+      },
+      password: {
+        required: true,
+        minlength: 6
+      }
+    },
+    messages: {
+        email: {
+          required: "Please enter an email",
+          email: "Email must be valid"
+        },
+        password: {
+          required: "Please enter a password",
+          minlength: "Password must be at least 6 characters in length"
+        }
+      }
+  })
 
 
 });

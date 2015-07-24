@@ -11,7 +11,8 @@ var express = require('express'),
     session = require('express-session'),
     User = require('./models/user'),
     cors = require('cors'),
-    Score = require('./models/score');
+    Score = require('./models/score')
+    ;
 // require('./models/user.js');
     mongoose.connect(
       process.env.MONGOLAB_URI ||
@@ -38,7 +39,7 @@ app.use(session ({
 app.use('/', function (req, res, next) {
   //saves userId in session for logged in user
   req.login = function (user) {
-    req.session.userId = user.id;
+    req.session.userId = user._id;
   };
 
   //finds user currently logged in based on 'session'
@@ -76,9 +77,23 @@ app.post('/users', function (req, res) {
   console.log("req.body", newUser);
   // create new user with secure password
   User.createSecure(newUser.email, newUser.password, newUser.username, function (err, user) {
-    res.send(user);
+    
+    req.login(user);
+
+    //redirect to user profile
+    res.redirect('/profile');
   });
 });
+
+
+//log out of session
+app.get('/logout', function (req, res) {
+  //log out of session
+  req.logout();
+
+  //redirect to home page
+  res.redirect('/');
+})
 
 // creates a new session
 app.post('/api/sessions', function (req, res) {
@@ -128,7 +143,8 @@ app.get('/profile', function (req, res) {
 //Comment index
 app.get('/api/comment', function (req, res) {
   //send all Comment as JSON response
-  Comment.find(function (err, comments){
+
+  Comment.find({}).populate('user').exec(function (err, comments){
     res.json(comments);
   })
 });
@@ -136,17 +152,42 @@ app.get('/api/comment', function (req, res) {
 //create new Comment
 app.post('/api/comment', function (req, res) {
 
-  console.log("this is before my new comment");
-  // grab params from form data (user, status)
-  var newComment = new Comment({
-    status: req.body.status
-  })
-     console.log("this is after my comment", newComment);
+  var newComment = new Comment(req.body);
 
-  //save new Comment into database
-  newComment.save(function (err, savedComment) {
-    res.json(savedComment);
+  User.findOne({_id: req.session.userId}).exec(function(err, user) {
+
+    console.log("--> this is the current user");
+    console.log(user.email);
+
+    // newComment.username = user.username;
+
+    newComment.save(function (err, savedComment) {
+      res.json(savedComment);
+    });
+
   });
+
+  User.findOne({_id: req.session.userId}).exec(function(err, foundUser) {
+
+    // add newList to `lists` array
+    foundUser.comment.push(newComment);
+
+    foundUser.save(function (err, savedComment) {
+    });
+
+  });
+
+  // console.log("this is before my new comment");
+  // // grab params from form data (user, status)
+  // var newComment = new Comment({
+  //   status: req.body.status
+  // })
+  //    console.log("this is after my comment", newComment);
+
+  // //save new Comment into database
+  // newComment.save(function (err, savedComment) {
+  //   res.json(savedComment);
+  // });
 });
 
 // find a Comment by the id
@@ -191,6 +232,19 @@ app.delete('/api/comment/:id', function (req, res) {
   });
 });
 
+// FINDS CURRENT User
+app.get('/api/current', function (req, res) {
+  User.findOne({_id: req.session.userId}).exec(function (err, user) {
+    res.json(user);
+  });
+});
+
+// log out user (destroy session)
+app.get('/logout', function (req, res) {
+  req.logout();
+  res.redirect('/');
+});
+
 // LEADERBOARD
 
 app.get('/api/score', function (req, res) {
@@ -203,7 +257,7 @@ app.get('/api/score', function (req, res) {
 app.post('/api/score', function (req, res) {
   // grab params from form data (user, score)
   var newScore = new Score({
-    status: 0 //this is where we put the route to the game score
+    score: 0 //this is where we put the route to the game score
   })
   console.log("newScore", newScore);
   //save new Comment into database

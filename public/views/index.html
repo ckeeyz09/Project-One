@@ -22,6 +22,18 @@
 
   </head>
   <body>
+  <!-- SCRIPTS -->
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+   <!-- jQuery Validation library -->
+  <script src="../scripts/jquery.validate.js"></script>
+  <!-- Latest compiled and minified JavaScript for Bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <!-- Latest compiled and minified JavaScript for Underscore.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <!-- YOUR SCRIPTS -->
+  <script src="../scripts/script.js"></script> 
+
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
@@ -32,34 +44,76 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#"><img src="http://imgur.com/FaAkmwt.jpg"></a>
+        <a class="navbar-brand" href="/"><img src="http://imgur.com/FaAkmwt.jpg"></a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">About me<span class="sr-only">(current)</span></a></li>
-          <li class="active"><a href="#">How to play</a></li>
+          <li class="active"><a href="/about">About me<span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="/learn">How to play</a></li>
         </ul>
+      <div class="hidden" id="signup-login">
         <ul class="nav navbar-nav navbar-right">
           <li><a data-toggle="modal" data-target="#login-modal">Log in</a></li>
-          <li><a href="#">Sign up!</a></li>
+          <li><a data-toggle="modal" data-target="#signup-modal">Sign up!</a></li>
         </ul>
-        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-          <div class="modal-dialog" role="document">
+      </div>
+      <div class="hidden" id="logged-in">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a><h7 id="login-name"></h7></a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a id="logout-button">Log Out</a></li>
+        </ul>
+      </div>
+        <div class="modal fade" id="login-modal">
+          <div class="modal-dialog">
             <div class="modal-content">
-            <form method="POST" action="/login">
+            <form id="loginForm">
               <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">Log In</h4>
               </div>
               <div class="modal-body">
                   <div class="form-group">
                     <label for="login-email" class="control-label">Email:</label>
-                    <input type="text" class="form-control" id="login-email">
+                    <input type="text" class="form-control" id="login-email" name="email">
                   </div>
                   <div class="form-group">
                     <label for="login-password" class="control-label">Password:</label>
-                    <input type="text" class="form-control" id="login-password">
+                    <input type="password" class="form-control" id="login-password" name="password">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-success"></input>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="signup-modal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            <form method="POST" action="/users" id="signupForm">
+              <div class="modal-header">
+                <h4 class="modal-title" id="ModalLabel">Sign up</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label for="login-email" class="control-label">Username:</label>
+                    <input type="text" class="form-control" id="signup-username" name="username">
+                  </div>    
+                  <div class="form-group">
+                    <label for="login-email" class="control-label">Email:</label>
+                    <input type="email" class="form-control" id="signup-email" name="email">
+                  </div>
+                  <div class="form-group">
+                    <label for="login-password" class="control-label">Password:</label>
+                    <input type="password" class="form-control" id="signup-password" name="password">
+                  </div>
+                  <div class="form-group">
+                    <label for="login-password" class="control-label">Confirm Password:</label>
+                    <input type="password" class="form-control" id="signup-confirm" name="confirm_password">
                   </div>
               </div>
               <div class="modal-footer">
@@ -74,53 +128,46 @@
     </div><!-- /.container-fluid -->
   </nav>
 
+  <!-- canvas frame -->
+  <!-- Phaser.io SCRIPT -->
+  <script src="../scripts/phaser.min.js"></script>
+  <!-- Game Scripts SCRIPTS -->
+  <script src="../scripts/preload.js"></script>
+  <script src="../scripts/titlescreen.js"></script>
+  <script src="../scripts/game.js"></script>
+  <script src="../scripts/gameover.js"></script>
+  <div id="phaser-game"></div>
 
 
-    <!-- canvas frame -->
-    <div class="container">
-        <div class="row" id="game-canvas">
-            <!-- <div class="col-md-6 col-md-3-offset" -->
-                <canvas id="canvas" width="800" height="600" style="border:1px solid #000000;">
-                Your browser does not support the HTML5 canvas tag.
-                </canvas>
-                <script type="text/javascript">
-
-                var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-                
-                function preload() {
-
-                        game.load.image('sky', '../assets/sky.png');
-                        game.load.image('ground', '../assets/platform.png');
-                        game.load.image('star', '../assets/star.png');
-                        game.load.spritesheet('dude', '../assets/dude.png', 32, 48);
-
-                    }
-                </script>
+    <script type="text/javascript">
+      (function() {
+        var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, "phaser-game");
+        console.log("game", game);
+        game.state.add("Preload", preload);
+        game.state.add("Titlescreen", titlescreen);
+        game.state.add("Game", game);
+        game.state.add("Gameover", gameover);
+        game.state.start("Preload");
+      })();
+    </script>
+  </div>
             <!-- </div> -->
         </div>
         <div class="row" id="scoreboard-comments">
         <br>
         <br>
+        <!-- Scoreboard + template -->
             <div class="col-md-6" id="scoreboard">
             <div class="panel panel-warning">
                 <div class="panel-heading">
                 <h3 class="panel-title"> Leader Board </h3>
                 </div>
                 <div class="panel-body" id="score-list">
-                <script type="text/template" id="score-template">
-                    <ol type="1" class="scoreboard">
-                        <li class="col-sm-6"><%= statusArray[0].user %></li><li class="col-sm-6"><%= score1 %></li>
-                        <li class="col-sm-6"><%= user2 %></li><li class="col-sm-6"><%= score2 %></li>
-                        <li class="col-sm-6"><%= user3 %></li><li class="col-sm-6"><%= score3 %></li>
-                        <li class="col-sm-6"><%= user4 %></li><li class="col-sm-6"><%= score4 %></li>
-                        <li class="col-sm-6"><%= user5 %></li><li class="col-sm-6"><%= score5 %></li>
-                        <li class="col-sm-6"><%= user6 %></li><li class="col-sm-6"><%= score6 %></li>
-                        <li class="col-sm-6"><%= user7 %></li><li class="col-sm-6"><%= score7 %></li>
-                        <li class="col-sm-6"><%= user8 %></li><li class="col-sm-6"><%= score8 %></li>
-                        <li class="col-sm-6"><%= user9 %></li><li class="col-sm-6"><%= score9 %></li>
-                        <li class="col-sm-6"><%= user10 %></li><li class="col-sm-6"><%= score10 %></li>
-                    </ol>
-                </script>
+                  <ol type="1" class="scoreboard">
+                    <script type="text/template" id="score-template">
+                      <li class="col-sm-6"><%= user %></li><li class="col-sm-6"><%= score %></li>
+                    </script>
+                  </ol>
                 </div>
             </div>
             </div>
@@ -139,7 +186,7 @@
                 <div class="comment-container">
                     <div class="comment panel panel-info" id="comment-<%= _id %>" data-id="<%= _id %>"> 
                         <div class="panel-heading">
-                            <h3 class="panel-title">Username placeholder</h3>
+                            <h3 class="panel-title"></h3>
                         </div>
                         <div class="panel-body">
                             <span class="my-button-group">
@@ -170,25 +217,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-    <!-- SCRIPTS -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!-- Latest compiled and minified JavaScript for Bootstrap -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <!-- Latest compiled and minified JavaScript for Underscore.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <!-- YOUR SCRIPTS -->
-    <script src="../scripts/script.js"></script>
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
   </body>
 </html>

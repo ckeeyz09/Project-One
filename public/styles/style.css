@@ -3,6 +3,15 @@ body {
   background-image: url("http://imgur.com/8QLLy2e.jpg");
 }
 
+canvas {
+   display : block;
+   margin : auto;
+}
+
+.hidden {
+  display: none;
+}
+
 .signup {
   font-size: 2em;
   color: rgba(0, 0, 0, 1);

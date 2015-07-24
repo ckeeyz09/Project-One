@@ -1,10 +1,14 @@
 
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    User = require('./user.js');
 
 var CommentSchema = new Schema({
-  user: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   status: String
 });
 
